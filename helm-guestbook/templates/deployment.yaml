@@ -14,7 +14,7 @@ spec:
     matchLabels:
       app: {{ template "helm-guestbook.name" . }}
       release: {{ .Release.Name }}
-      nodepool: webapp
+
   template:
     metadata:
       labels:
@@ -22,7 +22,7 @@ spec:
         release: {{ .Release.Name }}
     spec:
       nodeSelector:
-        nodepool: webapp
+        type: webapp
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
