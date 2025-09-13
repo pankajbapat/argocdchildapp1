@@ -14,12 +14,15 @@ spec:
     matchLabels:
       app: {{ template "helm-guestbook.name" . }}
       release: {{ .Release.Name }}
+      nodepool: webapp
   template:
     metadata:
       labels:
         app: {{ template "helm-guestbook.name" . }}
         release: {{ .Release.Name }}
     spec:
+      nodeSelector:
+        nodepool: webapp
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
