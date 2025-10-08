@@ -4,6 +4,8 @@ metadata:
   name: guestbook-ui
   annotations:
     service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    #service.beta.kubernetes.io/azure-load-balancer-ipv4: 192.168.
+    service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "webapp_subnet"
 spec:
   type: LoadBalancer
   ports:
