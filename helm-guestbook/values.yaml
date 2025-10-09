@@ -12,8 +12,14 @@ image:
 containerPort: 80
 
 service:
-  type: ClusterIP
+  #type: ClusterIP
+  
+  type: LoadBalancer         # required for Azure LB
+  internal: true             # add the ILB annotation
   port: 80
+
+  #port: 80
+  subnetName: "webapp_subnet"  
 
 ingress:
   enabled: false

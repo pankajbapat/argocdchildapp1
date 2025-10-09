@@ -7,8 +7,35 @@ metadata:
     chart: {{ template "helm-guestbook.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+  annotations:
+    {{- if and (eq .Values.service.type "LoadBalancer") .Values.service.internal }}
+    # Mark this as an internal Azure Load Balancer
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    {{- if .Values.service.subnetName }}
+    # Optional: place the ILB on a specific subnet by name (AKS-managed vnet)
+    service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "{{ .Values.service.subnetName }}"
+    {{- end }}
+    {{- if .Values.service.lbResourceGroup }}
+    # Optional: if the load balancer (or vnet) is in a different resource group
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: "{{ .Values.service.lbResourceGroup }}"
+    {{- end }}
+    {{- if .Values.service.healthProbePath }}
+    # Optional: custom health probe path (HTTP/HTTPS backends)
+    service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: "{{ .Values.service.healthProbePath }}"
+    {{- end }}
+    {{- end }}
+
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.service.type | default "ClusterIP" }}
+  {{- if and (eq .Values.service.type "LoadBalancer") .Values.service.loadBalancerIP }}
+  # Optional: static private IP from your node subnet
+  loadBalancerIP: {{ .Values.service.loadBalancerIP | quote }}
+  {{- end }}
+  {{- if .Values.service.externalTrafficPolicy }}
+  externalTrafficPolicy: {{ .Values.service.externalTrafficPolicy }}
+  {{- end }}
+
+
   ports:
     - port: {{ .Values.service.port }}
       targetPort: http
