@@ -14,7 +14,7 @@ spec:
   selector:
     app: guestbook-ui
 ---
-apiVersion: gateway.networking.k8s.io/v1beta1
+apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
   name: Gateway-Guestbook
@@ -23,7 +23,7 @@ metadata:
 spec:
   gatewayClassName: azure-alb-external
   listeners:
-    - name: http
+    - name: http-listener
       protocol: HTTP
       port: 80
 ---
