@@ -26,6 +26,9 @@ spec:
     - name: http-listener
       protocol: HTTP
       port: 80
+  addresses:
+  - type: alb.networking.azure.io/alb-frontend
+    value: "test-frontend"
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
