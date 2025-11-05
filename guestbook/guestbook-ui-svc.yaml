@@ -36,10 +36,6 @@ spec:
   parentRefs:
     - name: gateway-guestbook
   rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
-      backendRefs:
+    - backendRefs:
         - name: guestbook-ui
           port: 80
