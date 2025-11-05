@@ -18,6 +18,8 @@ apiVersion: gateway.networking.k8s.io/v1beta1
 kind: Gateway
 metadata:
   name: Gateway-Guestbook
+  annotations:
+    alb.networking.azure.io/alb-id: "/subscriptions/19526731-8b70-48b5-9dc9-46a102a6660c/resourceGroups/rg-azugwc-cluster-tst-001/providers/Microsoft.ServiceNetworking/trafficControllers/alb-test"
 spec:
   gatewayClassName: azure-alb-external
   listeners:
