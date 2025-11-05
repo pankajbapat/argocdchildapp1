@@ -2,7 +2,11 @@ apiVersion: v1
 kind: Service
 metadata:
   name: guestbook-ui
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+    service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "webapp_subnet"
 spec:
+  type: LoadBalancer
   ports:
   - port: 80
     targetPort: 80
