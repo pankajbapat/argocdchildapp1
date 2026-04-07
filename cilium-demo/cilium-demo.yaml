@@ -189,6 +189,7 @@ spec:
 # ---------------------------------------------------------
 # 1. Default Deny (Ingress + Egress)
 # ---------------------------------------------------------
+
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
@@ -196,3 +197,5 @@ metadata:
   namespace: cilium-demo
 spec:
   endpointSelector: {}
+  ingress: []
+  egress: []
