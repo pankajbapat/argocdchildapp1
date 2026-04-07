@@ -113,3 +113,86 @@ spec:
     app: frontend
   ports:
   - port: 80
+
+---
+# ---------------------------------------------------------
+# 1. Default Deny (Ingress + Egress)
+# ---------------------------------------------------------
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: default-deny
+  namespace: cilium-demo
+spec:
+  endpointSelector: {}
+
+---
+# ---------------------------------------------------------
+# 2. Allow DNS Egress (CoreDNS in kube-system)
+# ---------------------------------------------------------
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-dns-egress
+  namespace: cilium-demo
+spec:
+  endpointSelector: {}
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: kube-system
+        k8s-app: kube-dns
+    toPorts:
+    - ports:
+      - port: "53"
+        protocol: UDP
+      - port: "53"
+        protocol: TCP
+
+---
+# ---------------------------------------------------------
+# 3. Allow Frontend -> Application (HTTP)
+# ---------------------------------------------------------
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-frontend-to-application
+  namespace: cilium-demo
+spec:
+  endpointSelector:
+    matchLabels:
+      app: app
+      tier: application
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        app: frontend
+        tier: frontend
+    toPorts:
+    - ports:
+      - port: "80"
+        protocol: TCP
+
+---
+# ---------------------------------------------------------
+# 4. Allow Application -> Database (PostgreSQL)
+# ---------------------------------------------------------
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-application-to-database
+  namespace: cilium-demo
+spec:
+  endpointSelector:
+    matchLabels:
+      app: db
+      tier: database
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        app: app
+        tier: application
+    toPorts:
+    - ports:
+      - port: "5432"
+        protocol: TCP
