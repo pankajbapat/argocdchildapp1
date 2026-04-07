@@ -114,18 +114,6 @@ spec:
   ports:
   - port: 80
 
-# ---
-# ---------------------------------------------------------
-# 1. Default Deny (Ingress + Egress)
-# ---------------------------------------------------------
-# apiVersion: cilium.io/v2
-# kind: CiliumNetworkPolicy
-# metadata:
-#   name: default-deny
-#   namespace: cilium-demo
-# spec:
-#   endpointSelector: {}
-
 ---
 # ---------------------------------------------------------
 # 2. Allow DNS Egress (CoreDNS in kube-system)
@@ -196,3 +184,15 @@ spec:
     - ports:
       - port: "5432"
         protocol: TCP
+
+---
+# ---------------------------------------------------------
+# 1. Default Deny (Ingress + Egress)
+# ---------------------------------------------------------
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: default-deny
+  namespace: cilium-demo
+spec:
+  endpointSelector: {}
